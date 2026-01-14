@@ -496,6 +496,11 @@ end
 	end
 	-- diff
 	do
+	    if not io.open("/tmp/dlinkold.txt") then
+            log("首次订阅：未发现旧节点，跳过 diff")
+            goto ADD_ONLY
+        end
+	
 		if next(nodeResult) == nil then
 			log("更新失败，没有可用的节点信息")
 			return
@@ -527,6 +532,7 @@ end
 	
 			end
 		end
+	    ::ADD_ONLY::
 		local ssrindext = io.popen('dbus list ssconf_basic_|grep _json_ | cut -d "=" -f1|cut -d "_" -f4|sort -rn|head -n1')
 		local ssrindex = ssrindext:read("*all")
 		if #ssrindex == 0 then
@@ -548,5 +554,6 @@ end
 		log('新增节点数量: ' .. add, '删除节点数量: ' .. del)
 		log('订阅更新成功')
 		end
+
 
 
